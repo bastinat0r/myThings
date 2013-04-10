@@ -1,14 +1,26 @@
-module kreisel() {
-		for(i = [0:0.2:2]) {
-			translate([0,0,i*4]) cylinder(0.8,exp(i), exp(((i+0.2))));
+
+/* 
+	first param: height of the lower part
+	second param: radius of the border between sphere and lower part
+	third param: height of the spheric part
+*/
+
+module kreisel(h, r1, x) {
+		for(i = [0:0.3:(h-0.3)]) {
+			translate([0,0,i]) cylinder(0.3,exp(i/h*ln(r1)), exp(((i+0.3)/h*ln(r1))));
 		}
+		
 		translate([0,0,-0.8]) cylinder(0.8, 0, 1);
-			translate([0,0,8.8]) difference() {
-			sphere(exp(2+0.2));
-			translate([-10, -10, 5]) cube([20, 20, 20]);
-			translate([-10, -10, -20]) cube([20, 20, 20]);
-			translate([0, 0, -5]) cylinder(10, 0.6);
+
+		alpha = atan(r1 / x);
+		r = r1 / sin(alpha);
+
+		translate([0,0,h + x]) difference() {
+			sphere(r);
+			translate([-r, -r, x]) cube(2 * r);
+			translate([-r, -r, -x - 2*r]) cube(2 * r);
+			translate([0, 0, h + x - 10]) cylinder(10, 0.7);
 		}
 }
 
-kreisel();
+kreisel(6, 9, 4);
